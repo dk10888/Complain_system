@@ -58,14 +58,25 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "Invalid email or password" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid email or password" });
+    if (!user) {
+      console.log("Login failed: user not found for email:", email);
+      return res.status(400).json({ message: "Invalid email" });
+    }
+
+    console.log("Request password:", password);
+    console.log("Stored hash:", user.password);
+
+    const isMatch = await bcrypt.compare(password.trim(), user.password);
+
+    if (!isMatch) {
+      console.log("Login failed: password mismatch");
+      return res.status(400).json({ message: "Invalid password" });
+    }
 
     const token = generateToken(user);
+
+    console.log("Login successful for:", email);
 
     res.json({
       message: "Login successful",

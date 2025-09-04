@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to={getToken() ? (getRole() === "admin" ? "/admin" : "/complaints") : "/login"} />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup onBack={() => window.location.href = "/login"} />} />
+        <Route path="/signup" element={<Signup onBack={() => window.location.href="/login"} />} />
         <Route path="/admin" element={<ProtectedRoute role="admin"><AdminPanel /></ProtectedRoute>} />
         <Route path="/complaints" element={<ProtectedRoute role="complainer"><ComplaintsSubmit /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />

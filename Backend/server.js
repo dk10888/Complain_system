@@ -4,7 +4,7 @@ const cors = require("cors");
 require("dotenv").config({ path: __dirname + "/.env" });
 
 const authRoutes = require("./Routes/authRoutes");
-const complainRoutes = require("./Routes/complainRoutes");
+const complainRoutes = require("./Routes/complainroutes");
 
 const app = express();
 app.use(cors());

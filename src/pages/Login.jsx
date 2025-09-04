@@ -14,14 +14,26 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      setToken(res.data.token);
-      setRole(res.data.role);
+      // Make API call to backend
+      const res = await axios.post("http://localhost:3000/api/auth/login", { email, password });
 
-      if (res.data.role === "admin") window.location.href = "/admin";
-      else window.location.href = "/complaints";
+      // Store token and role
+      setToken(res.data.token);
+      setRole(res.data.user.isAdmin ? "admin" : "complainer");
+
+      // Redirect based on role
+      if (res.data.user.isAdmin) {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/complaints";
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      // Show detailed error from backend
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Login failed. Please try again.");
+      }
     }
   };
 
@@ -40,6 +52,7 @@ const Login = () => {
           required
           className="w-full border px-3 py-2 rounded focus:ring-2 focus:ring-blue-500 outline-none"
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -51,7 +64,10 @@ const Login = () => {
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
           Login
         </button>
 
