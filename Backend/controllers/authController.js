@@ -23,14 +23,12 @@ exports.signup = async (req, res) => {
     // check admin role
     const isAdmin = adminKey === process.env.ADMIN_KEY;
 
-    // hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
 
     // create user
     const user = await User.create({
       username,
       email,
-      password: hashedPassword,
+      password: password, 
       isAdmin,
     });
 
@@ -52,7 +50,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-// LOGIN
+// LOGIN - No changes needed, this part was correct
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;

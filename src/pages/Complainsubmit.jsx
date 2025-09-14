@@ -12,7 +12,7 @@ function ComplaintsSubmit() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/complaints", {
+      const res = await axios.get("http://localhost:3000/api/complaints/my", {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
       setComplaints(res.data);
@@ -21,18 +21,25 @@ function ComplaintsSubmit() {
     }
   };
 
-  useEffect(() => { fetchComplaints(); }, []);
+  useEffect(() => {
+    fetchComplaints();
+  }, []);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/complaints", formData, {
+      await axios.post("http://localhost:3000/api/complaints", formData, {
         headers: { Authorization: `Bearer ${getToken()}` },
       });
-      setComplaints([...complaints, res.data]);
-      setFormData({ date: new Date().toISOString().split("T")[0], subject: "", issue: "" });
+      setFormData({
+        date: new Date().toISOString().split("T")[0],
+        subject: "",
+        issue: "",
+      });
+      fetchComplaints(); // re-fetch complaints after new submission
     } catch (err) {
       console.error("Error submitting complaint:", err);
     }
@@ -42,26 +49,63 @@ function ComplaintsSubmit() {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-10">
-          <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">📝 Submit a Complaint</h1>
+          <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
+            📝 Submit a Complaint
+          </h1>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-600">Date</label>
-              <input type="date" name="date" value={formData.date} onChange={handleChange} className="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" />
+              <label className="block text-sm font-medium mb-1 text-gray-600">
+                Date
+              </label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-600">Subject</label>
-              <input type="text" name="subject" value={formData.subject} onChange={handleChange} placeholder="Enter complaint subject" className="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" required />
+              <label className="block text-sm font-medium mb-1 text-gray-600">
+                Subject
+              </label>
+              <input
+                type="text"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="Enter complaint subject"
+                className="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1 text-gray-600">Issue Details</label>
-              <textarea name="issue" value={formData.issue} onChange={handleChange} placeholder="Describe your issue in detail..." rows="5" className="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" required></textarea>
+              <label className="block text-sm font-medium mb-1 text-gray-600">
+                Issue Details
+              </label>
+              <textarea
+                name="issue"
+                value={formData.issue}
+                onChange={handleChange}
+                placeholder="Describe your issue in detail..."
+                rows="5"
+                className="w-full border rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                required
+              ></textarea>
             </div>
-            <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition font-semibold">Submit Complaint</button>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition font-semibold"
+            >
+              Submit Complaint
+            </button>
           </form>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">📜 Complaint History</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            📜 Complaint History
+          </h2>
           {complaints.length === 0 ? (
             <p className="text-gray-500">No complaints submitted yet.</p>
           ) : (
@@ -82,11 +126,17 @@ function ComplaintsSubmit() {
                       <td className="px-4 py-2 border">{c.date}</td>
                       <td className="px-4 py-2 border">{c.subject}</td>
                       <td className="px-4 py-2 border">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                          c.status === "Submitted" ? "bg-yellow-100 text-yellow-800" :
-                          c.status === "in process" ? "bg-blue-100 text-blue-800" :
-                          "bg-green-100 text-green-800"
-                        }`}>{c.status}</span>
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            c.status === "Submitted"
+                              ? "bg-yellow-100 text-yellow-800"
+                              : c.status === "in process"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
+                        >
+                          {c.status}
+                        </span>
                       </td>
                     </tr>
                   ))}

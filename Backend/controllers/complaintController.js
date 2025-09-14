@@ -16,17 +16,43 @@ exports.submitComplaint = async (req, res) => {
   }
 };
 
-// Get all complaints (admin)
+// Get all complaints (admin only)
 exports.getAllComplaints = async (req, res) => {
+  console.log("Admin fetching complaints...");
   try {
-    const complaints = await Complaint.find().populate("createdBy", "username email");
-    res.json(complaints);
+    const complaints = await Complaint.find()
+      .populate({ path: "createdBy", select: "username email", strictPopulate: false })
+      .lean();
+
+    const safeComplaints = complaints.map(c => ({
+      ...c,
+      createdBy: c.createdBy || { username: "Deleted User", email: "-" },
+    }));
+
+    console.log("Complaints fetched:", safeComplaints);
+    res.json(safeComplaints);
   } catch (err) {
+    console.error("Error fetching complaints:", err);
     res.status(500).json({ message: "Failed to fetch complaints", error: err.message });
   }
 };
 
-// Update complaint status
+
+
+
+
+
+// Get complaints of logged-in user
+exports.getMyComplaints = async (req, res) => {
+  try {
+    const complaints = await Complaint.find({ createdBy: req.user.id });
+    res.json(complaints);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch your complaints", error: err.message });
+  }
+};
+
+// Update complaint status (admin only)
 exports.updateStatus = async (req, res) => {
   try {
     const { id } = req.params;
