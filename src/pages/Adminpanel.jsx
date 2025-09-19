@@ -51,7 +51,7 @@ console.log("at admin")
                 <td className="border border-gray-300 px-4 py-2">{c.issue}</td>
                 <td className="border border-gray-300 px-4 py-2 capitalize">{c.status}</td>
                 <td className="border border-gray-300 px-4 py-2 space-x-2">
-                  {c.status === "Submitted" && (
+                  {c.status === "pending" && (
                     <button onClick={() => updateStatus(c._id, "in process")} className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
                       Mark In Process
                     </button>
@@ -75,7 +75,7 @@ console.log("at admin")
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">📋 Admin Complaint Panel</h1>
-      {renderTable("🟢 New Complaints", complaints.filter(c => c.status === "Submitted"))}
+      {renderTable("🟢 New Complaints", complaints.filter(c => c.status === "pending"))}
       {renderTable("🟡 In Process Complaints", complaints.filter(c => c.status === "in process"))}
       {renderTable("✅ Resolved Complaints", complaints.filter(c => c.status === "resolved"))}
     </div>
