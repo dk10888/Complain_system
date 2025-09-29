@@ -29,7 +29,7 @@ exports.getAllComplaints = async (req, res) => {
       createdBy: c.createdBy || { username: "Deleted User", email: "-" },
     }));
 
-    console.log("Complaints fetched:", safeComplaints);
+    //console.log("Complaints fetched:", safeComplaints);
     res.json(safeComplaints);
   } catch (err) {
     console.error("Error fetching complaints:", err);

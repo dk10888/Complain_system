@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../utils/auth";
+import { Logout } from "../utils/logout";
 
 const AdminPanel = () => {
   const [complaints, setComplaints] = useState([]);
@@ -31,8 +32,10 @@ console.log("at admin")
 
   const renderTable = (title, data) => (
     <div className="mb-8">
+      
       <h2 className="text-xl font-semibold mb-3">{title}</h2>
       <div className="overflow-x-auto">
+        
         <table className="min-w-full border border-gray-300 text-sm">
           <thead className="bg-gray-100">
             <tr>
@@ -73,7 +76,9 @@ console.log("at admin")
   );
 
   return (
+    
     <div className="p-6 max-w-5xl mx-auto">
+      <Logout/>
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">📋 Admin Complaint Panel</h1>
       {renderTable("🟢 New Complaints", complaints.filter(c => c.status === "pending"))}
       {renderTable("🟡 In Process Complaints", complaints.filter(c => c.status === "in process"))}

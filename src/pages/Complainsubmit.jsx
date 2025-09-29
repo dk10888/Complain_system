@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getToken } from "../utils/auth";
+import { Logout } from "../utils/logout";
 
 function ComplaintsSubmit() {
   const [formData, setFormData] = useState({
@@ -49,6 +50,7 @@ function ComplaintsSubmit() {
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-10">
+          <Logout/>
           <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">
             📝 Submit a Complaint
           </h1>

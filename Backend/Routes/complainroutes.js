@@ -7,7 +7,7 @@ const {
   getMyComplaints,
   updateStatus,
 } = require("../controllers/complaintController");
-console.log("reached")
+
 // User submits complaint
 router.post("/", protect, submitComplaint);
 
